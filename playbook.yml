@@ -1,3 +1,11 @@
 - hosts: all
   become: true
   tasks:
+    - name: copy the content
+      copy:
+        content: "Heloo"
+        dest: /var/www/html/index.html
+      notify: restart_httpd
+  handlers:
+  - name: restart_httpd
+    service: restarted
