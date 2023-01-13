@@ -6,7 +6,7 @@
   tasks:
   - name: install httpd package
     yum:
-     name: thttpd
+     name: httpd
      state: latest
   - name: start and enable httpd service at boot
     service:

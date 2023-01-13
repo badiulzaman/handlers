@@ -3,9 +3,11 @@
   tasks:
     - name: copy the content
       copy:
-        content: "Heloo"
+        content: Hello DevOps
         dest: /var/www/html/index.html
-      notify: restart_httpd
+      notify: restart_apache
   handlers:
-  - name: restart_httpd
-    service: restarted
+  - name: restart_apache
+    service: 
+      name: httpd
+      state: restarted
