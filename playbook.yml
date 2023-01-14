@@ -1,0 +1,37 @@
+---
+- name: setting handelers
+  hosts: node1
+  gather_facts: no
+  tasks:
+   - name: install apache
+     yum:
+       name: httpd
+   - name: start apache
+     service:
+       name: httpd
+       state: started
+   - name: install firewalld
+     yum:
+       name: firewalld
+     
+   - name: start firewalld
+     service:
+       name: firewalld
+       state: started
+   - name: allow http in firewal
+     firewalld:
+       service: http
+       state: enabled
+       permanent: yes
+       immediate: yes
+   - name: copy content
+     copy:
+       content: Hell EXaminee
+       dest: /var/www/html/index.html
+     notify: restart_apache
+  handlers:
+  - name: restart_apache
+    service:
+      name: httpd
+      state: restarted
+... 
