@@ -1,0 +1,49 @@
+---
+- name: Install httpd alias
+  hosts: node3
+  become: true
+  become_user: root
+  tasks:
+  - name: Install httpd package
+    yum:
+     name: httpd
+     state: latest
+  - name: start and enable httpd service at boot
+    service:
+      name: httpd
+      state: started
+      enabled: true
+  - name: install firewalld
+    yum:
+      name: firewalld
+      state: latest
+  - name: start and enable firewalld service at boot
+    service:
+      name : firewalld
+      state: started
+      enabled: true
+  - name: allow http in firewalld
+    firewalld:
+      service: "{{ item }}"
+      state: enabled
+      permanent: yes
+      immediate: true
+    loop:
+      - http
+      - https
+    notify: restart_firewalld
+  - name: Genrate a basic page
+    copy:
+      content: " Hello World!"  
+      dest: /var/www/html/index.html
+    notify: restart_httpd
+  handlers:
+  - name: restart_firewalld
+    service:
+      name: firewalld
+      state: restarted   
+  - name: restart_httpd
+    service:
+      name: httpd
+      state: restarted   
+...
